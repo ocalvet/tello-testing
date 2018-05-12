@@ -6,12 +6,15 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"gobot.io/x/gobot"
+	"gobot.io/x/gobot/api"
 	"gobot.io/x/gobot/platforms/dji/tello"
 )
 
 func main() {
 	drone := tello.NewDriver("8888")
-
+	master := gobot.NewMaster()
+	a := api.NewAPI(master)
+	a.Start()
 	// work := func() {
 	// 	drone.TakeOff()
 
@@ -55,6 +58,6 @@ func main() {
 		[]gobot.Device{drone},
 		work,
 	)
-
-	robot.Start()
+	master.AddRobot(robot)
+	master.Start()
 }
