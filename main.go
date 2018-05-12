@@ -1,8 +1,10 @@
 package main
 
 import (
-	"time"
+	"net/http"
 
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 	"gobot.io/x/gobot"
 	"gobot.io/x/gobot/platforms/dji/tello"
 )
@@ -10,22 +12,44 @@ import (
 func main() {
 	drone := tello.NewDriver("8888")
 
+	// work := func() {
+	// 	drone.TakeOff()
+
+	// 	gobot.After(5*time.Second, func() {
+	// 		drone.FrontFlip()
+	// 	})
+
+	// 	gobot.After(10*time.Second, func() {
+	// 		drone.BackFlip()
+	// 	})
+
+	// 	gobot.After(15*time.Second, func() {
+	// 		drone.Land()
+	// 	})
+	// }
+
 	work := func() {
-		drone.TakeOff()
-
-		gobot.After(5*time.Second, func() {
-			drone.FrontFlip()
+		r := gin.Default()
+		r.Use(cors.New(cors.Config{
+			AllowAllOrigins:  true,
+			AllowCredentials: true,
+			AllowMethods:     []string{"*"},
+			AllowHeaders:     []string{"*"},
+		}))
+		r.Use()
+		r.GET("/tello/takeoff", func(c *gin.Context) {
+			drone.TakeOff()
+			c.JSON(http.StatusOK, gin.H{
+				"success": true,
+			})
 		})
 
-		gobot.After(10*time.Second, func() {
-			drone.BackFlip()
-		})
-
-		gobot.After(15*time.Second, func() {
+		r.GET("/tello/land", func(c *gin.Context) {
 			drone.Land()
 		})
-	}
 
+		r.Run(":9081")
+	}
 	robot := gobot.NewRobot("tello",
 		[]gobot.Connection{},
 		[]gobot.Device{drone},
