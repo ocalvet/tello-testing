@@ -32,6 +32,7 @@ func main() {
 	// }
 
 	work := func() {
+		drone.TakeOff()
 		r := gin.Default()
 		r.Use(cors.New(cors.Config{
 			AllowAllOrigins:  true,
@@ -49,6 +50,37 @@ func main() {
 
 		r.GET("/tello/land", func(c *gin.Context) {
 			drone.Land()
+			c.JSON(http.StatusOK, gin.H{
+				"success": true,
+			})
+		})
+
+		r.GET("/tello/left", func(c *gin.Context) {
+			drone.Left(1)
+			c.JSON(http.StatusOK, gin.H{
+				"success": true,
+			})
+		})
+
+		r.GET("/tello/right", func(c *gin.Context) {
+			drone.Right(1)
+			c.JSON(http.StatusOK, gin.H{
+				"success": true,
+			})
+		})
+
+		r.GET("/tello/forward", func(c *gin.Context) {
+			drone.Forward(1)
+			c.JSON(http.StatusOK, gin.H{
+				"success": true,
+			})
+		})
+
+		r.GET("/tello/backward", func(c *gin.Context) {
+			drone.Backward(1)
+			c.JSON(http.StatusOK, gin.H{
+				"success": true,
+			})
 		})
 
 		r.Run(":9081")
