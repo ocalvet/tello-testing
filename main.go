@@ -83,6 +83,34 @@ func main() {
 			})
 		})
 
+		r.GET("/tello/flip/right", func(c *gin.Context) {
+			drone.RightFlip()
+			c.JSON(http.StatusOK, gin.H{
+				"success": true,
+			})
+		})
+
+		r.GET("/tello/flip/left", func(c *gin.Context) {
+			drone.LeftFlip()
+			c.JSON(http.StatusOK, gin.H{
+				"success": true,
+			})
+		})
+
+		r.GET("/tello/flip/front", func(c *gin.Context) {
+			drone.FrontFlip()
+			c.JSON(http.StatusOK, gin.H{
+				"success": true,
+			})
+		})
+
+		r.GET("/tello/flip/back", func(c *gin.Context) {
+			drone.BackFlip()
+			c.JSON(http.StatusOK, gin.H{
+				"success": true,
+			})
+		})
+
 		r.Run(":9081")
 	}
 	robot := gobot.NewRobot("tello",
